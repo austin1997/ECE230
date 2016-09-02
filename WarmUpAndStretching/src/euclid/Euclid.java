@@ -9,7 +9,14 @@ public class Euclid {
 	 */
 	public static long gcd(long a, long b) {
 		// TODO: Write this.
-		return -17;
+		if(a == 0 && b != 0) return b;
+		if(a != 0 && b == 0) return a;
+		if(a != 0 && b != 0){
+			if(a > b)return gcd(a%b, b);
+			else return gcd(a, b%a);
+		}
+		return -1;
+//		return gcd();
 	}
 
 }
