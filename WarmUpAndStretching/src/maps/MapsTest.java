@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.junit.Test;
 
@@ -25,7 +27,7 @@ public class MapsTest {
 
 		// A HashMap is a good all-purpose map, since it is fast: O(1) search,
 		// insertion, and deletion in many situations.
-		Map<String, Integer> ages = new HashMap<>();
+		SortedMap<String, Integer> ages = new TreeMap<String, Integer>();
 		// Fill the map.
 		ages.put("Bob", 17);
 		ages.put("Shelley", 21);
@@ -43,7 +45,7 @@ public class MapsTest {
 		// The test below will fail because the test is incorrect. Change the
 		// test so it passes. What we're really 
 		// after is that you see how to use get to retrieve data.
-		assertEquals(new Integer(17), ages.get("Rhonda"));
+		assertEquals(new Integer(16), ages.get("Rhonda"));
 
 		// Why does this test fail? The map contains all the names and ages!
 		// It's because hash maps order the data using a method we'll learn
