@@ -22,6 +22,18 @@ public class Anagram {
 	 */
 	public static boolean isAnagram(String s1, String s2) {
 		// TODO: implement this method
+		if(s1.length()==s2.length()){
+			s1 = s1.toLowerCase();
+			s2 = s2.toLowerCase();
+			for (int i = 0; i < s1.length(); i++){
+				char temp = s1.charAt(i);
+				int index = s2.indexOf(temp);
+				if (index == -1) return false;
+				
+			}
+			return true;
+		}
+		
 		return false;
 	}
 }
