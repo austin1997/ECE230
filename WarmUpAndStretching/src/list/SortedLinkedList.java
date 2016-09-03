@@ -1,5 +1,7 @@
 package list;
 
+import java.util.NoSuchElementException;
+
 /**
  * 
  * @author anderson
@@ -29,6 +31,16 @@ public class SortedLinkedList<T extends Comparable<T>> extends
 	public SortedLinkedList(DoublyLinkedList<T> list) {
 		super();
 		// TODO: finish implementing this constructor
+//		System.out.println(list.head.next.data);
+		
+		if(list.isEmpty()) return;
+		this.add(list.head.next.data);
+		Node current = this.head.next;
+		list.removeFirst();
+		while(!list.isEmpty()){
+			this.add(list.removeFirst());
+		}
+
 	}
 
 	/**
@@ -37,15 +49,41 @@ public class SortedLinkedList<T extends Comparable<T>> extends
 	@Override
 	public void add(T element) {
 		// TODO: implement this method
+		if(this.isEmpty()) this.head.addAfter(element);
+		else{
+			boolean flag = false;
+			Node current = this.head.next;
+			if(current.data.compareTo(element) > 0) {
+				this.addFirst(element);
+				flag = true;
+			}
+			else {
+				do {
+					if (current.data.compareTo(element) > 0) {
+						current.prev.addAfter(element);
+						flag = true;
+					}
+					current = current.next;
+				}while (current.next != null && !flag);
+				
+				
+			}
+			if (!flag) this.addLast(element);
+		}
+		
 	}
 
 	@Override
-	public void addFirst(T element) {
+	public void addFirst(T element) throws UnsupportedOperationException{
+		if(this.isEmpty()) throw new UnsupportedOperationException("empty list");
 		// TODO: throw UnsupportedOperationException exception
+		this.head.addAfter(element);
 	}
 
 	@Override
-	public void addLast(T element) {
+	public void addLast(T element) throws UnsupportedOperationException{
+		if(this.isEmpty()) throw new UnsupportedOperationException("empty list");
 		// TODO: throw UnsupportedOperationException exception
+		this.tail.prev.addAfter(element);
 	}
 }
