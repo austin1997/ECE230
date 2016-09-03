@@ -28,7 +28,9 @@ public class Triangle {
 	 */
 	public double area() {
 		// TODO: Implement this. Hint: lookup and use Heron's formula. 
-		return -17.0;
+		double p = (a + b + c)/2;
+		
+		return Math.sqrt(p*(p-a)*(p-b)*(p-c));
 	}
 
 	/**

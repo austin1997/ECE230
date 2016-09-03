@@ -104,7 +104,18 @@ public class ShapeTest {
 		// TODO: Create and add a comparator to compare triangles by area,
 		// so we can sort by area. Then pass it as a second argument to the
 		// sort method.
-		Arrays.sort(triangles);
+		Comparator<Triangle> byArea = new Comparator<Triangle>(){
+
+			@Override
+			public int compare(Triangle first, Triangle second) {
+				// TODO Auto-generated method stub.
+				
+				return (int)Math.signum(first.area()-second.area());
+			}
+			
+		};
+		
+		Arrays.sort(triangles, byArea);
 		printArray(triangles);
 		assertEquals(triangles[0], t4);
 		assertEquals(triangles[1], t2);
@@ -138,11 +149,25 @@ public class ShapeTest {
 		// TODO: 1 Modify the next line to create a new TreeSet - use the version
 		// of the constructor that takes a
 		// comparator, and pass the same comparator you wrote for the last test.
-		TreeSet<Triangle> triangleSet = null;
+		Comparator<Triangle> byArea = new Comparator<Triangle>(){
+
+			@Override
+			public int compare(Triangle first, Triangle second) {
+				// TODO Auto-generated method stub.
+				
+				return (int)Math.signum(first.area()-second.area());
+			}
+			
+		};
+		
+		TreeSet<Triangle> triangleSet = new TreeSet<Triangle>(byArea);
 
 		// TODO: 2 Iterate through the unsorted triangles array, adding the
 		// triangles
 		// to the TreeSet.
+		for (int i = 0; i < triangles.length; i++){
+			triangleSet.add(triangles[i]);
+		}
 
 		// TODO: 3 Iterate through the TreeSet using a foreach loop (Java's
 		// "enhanced" for loop) and output them. For an example of the foreach
@@ -152,8 +177,12 @@ public class ShapeTest {
 		// extra comma+space.
 		// Challenge: You could get rid of the last character though: remember a
 		// nice string method to do this?
-
-		
+		String str = "";
+		for (Triangle tri : triangleSet){
+			str += tri.toString() + ", ";
+		}
+		str = str.substring(0, str.length() - 2);
+		System.out.println("[" + str + "]"+'\n');
 		
 		// Note: the next line also prints the triangle set nicely - go,
 		// built-in methods! Compare with your results.
