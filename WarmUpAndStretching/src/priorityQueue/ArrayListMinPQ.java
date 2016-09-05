@@ -35,23 +35,15 @@ public class ArrayListMinPQ<T extends Comparable<T>> {
 		// TODO: implement
 		this.items.add(item);
 		if (this.isEmpty()) return;
-		Object [] array = this.items.toArray();
-//		T minimum = (T) array[0];
-		for(int i = 0; i < array.length - 1; i++){
-			for(int j = i; j < array.length - 1; j++){
-				if(((T)array[j]).compareTo((T)array[j + 1]) > 0){
-					T temp = (T) array[j];
-					array[j] = array [j + 1];
-					array[j + 1] = temp;
+		for(int i = 0; i < this.items.size() - 1; i++){
+			for(int j = i; j < this.items.size() - 1; j++){
+				if(this.items.get(j).compareTo(this.items.get(j + 1)) > 0){
+					T temp = this.items.get(j);
+					this.items.set(j,this.items.get(j + 1));
+					this.items.set(j + 1, temp);
 				}
 			}
 		}
-		items.clear();
-		for(Object obj : array){
-			items.add((T) obj);
-		}
-		
-		
 	}
 
 	public int size() {
