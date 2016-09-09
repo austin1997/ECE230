@@ -29,7 +29,7 @@ public class Anagram {
 				char temp = s1.charAt(i);
 				int index = s2.indexOf(temp);
 				if (index == -1) return false;
-				
+				s2 = s2.substring(0,index) + s2.substring(index + 1);
 			}
 			return true;
 		}
