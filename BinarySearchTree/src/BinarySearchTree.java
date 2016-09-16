@@ -136,8 +136,8 @@ public class BinarySearchTree<T> implements Iterable<T>{
 		public boolean contains(int i) {
 			// TODO Auto-generated method stub.
 			if(this.data.equals(i)) return true;
-			if(((Integer) this.data).compareTo(i) > 0)return this.left == NULL_NODE?false : this.left.contains(i);
-			return this.right == NULL_NODE?false : this.right.contains(i);
+			if(((Integer) this.data).compareTo(i) > 0)return this.left == BinarySearchTree.this.NULL_NODE?false : this.left.contains(i);
+			return this.right == BinarySearchTree.this.NULL_NODE?false : this.right.contains(i);
 			
 		}
 
@@ -164,7 +164,7 @@ public class BinarySearchTree<T> implements Iterable<T>{
 		 *
 		 * @return
 		 */
-		public ArrayList<T> toArrayList() {
+		public void toArrayList(ArrayList<T> arr) {
 			// TODO Auto-generated method stub.
 //			if(this.left == null && this.right == null) {
 //				ArrayList<T> arr = new ArrayList<T>();
@@ -190,17 +190,20 @@ public class BinarySearchTree<T> implements Iterable<T>{
 //				arr.addAll(this.right.toArrayList());
 //				return arr;
 //			}
-			if(this == BinarySearchTree.this.NULL_NODE) return new ArrayList<T>();
-			else {
-				ArrayList<T> arr = new ArrayList<T>();
-				arr.addAll(this.left.toArrayList());
+//			if(this == BinarySearchTree.this.NULL_NODE) return new ArrayList<T>();
+//			else {
+//				ArrayList<T> arr = new ArrayList<T>();
+//				arr.addAll(this.left.toArrayList());
+//				arr.add(this.data);
+//				arr.addAll(this.right.toArrayList());
+//				return arr;
+//			}
+			if(this == BinarySearchTree.this.NULL_NODE) return;
+			else{
+				this.left.toArrayList(arr);
 				arr.add(this.data);
-				arr.addAll(this.right.toArrayList());
-				return arr;
+				this.right.toArrayList(arr);
 			}
-			
-			
-			
 		}
 		
 	}
@@ -263,7 +266,9 @@ public class BinarySearchTree<T> implements Iterable<T>{
 	public ArrayList<T> toArrayList() {
 		// TODO Auto-generated method stub.
 //		if(this.isEmpty()) return new ArrayList<T>();
-		return this.root.toArrayList();
+		ArrayList<T> arr = new ArrayList<T>();
+		this.root.toArrayList(arr);
+		return arr;
 	}
 
 	/**
