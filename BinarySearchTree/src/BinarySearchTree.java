@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Stack;
 
 /**
  * 
@@ -10,9 +12,27 @@ import java.util.Iterator;
  */
 
 public class BinarySearchTree<T> implements Iterable<T>{
-	class InefficientIterator {
-		ArrayList<T> array = toArrayList();
-		Iterator itr = this.array.iterator();
+	public class InefficientIterator implements Iterator<T>{
+		private ArrayList<T> list;
+		private int index;
+		InefficientIterator(){
+			this.list = toArrayList();
+			this.index = 0;
+		}
+
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub.
+			return this.index < this.list.size();
+		}
+
+		@Override
+		public T next() {
+			// TODO Auto-generated method stub.
+			if(!this.hasNext()) throw new NoSuchElementException();
+			return this.list.get(this.index++);
+		}
+		
 		
 		
 	}
@@ -287,15 +307,52 @@ public class BinarySearchTree<T> implements Iterable<T>{
 	 *
 	 * @return
 	 */
-	public Iterator inefficientIterator() {
+	public Iterator<T> inefficientIterator() {
 		// TODO Auto-generated method stub.
-		return new InefficientIterator().itr;
+//		return this.toArrayList().iterator();
+		return new InefficientIterator();
 	}
 
 	@Override
 	public Iterator<T> iterator() {
 		// TODO Auto-generated method stub.
 		return null;
+	}
+
+	/**
+	 * TODO Put here a description of what this method does.
+	 *
+	 * @return
+	 */
+	public Iterator<T> preOrderIterator() {
+		// TODO Auto-generated method stub.
+		
+		return new PreOrderIterator();
+	}
+	
+	public class PreOrderIterator implements Iterator<T>{
+		Stack<BinaryNode> st;
+		PreOrderIterator(){
+			this.st = new Stack<BinaryNode>();
+			this.st.push(BinarySearchTree.this.root);
+		}
+
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub.
+			return !(this.st.isEmpty() || this.st.peek() == NULL_NODE);
+		}
+
+		@Override
+		public T next() {
+			// TODO Auto-generated method stub.
+			if(this.st.isEmpty()) throw new NoSuchElementException();
+			BinaryNode current = this.st.pop();
+			if(current.right != NULL_NODE) this.st.push(current.right);
+			if(current.left != NULL_NODE)this.st.push(current.left);
+			return current.data;
+		}
+		
 	}
 	
 	 
