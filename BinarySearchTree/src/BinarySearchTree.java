@@ -144,7 +144,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 		 * @param i
 		 * @return
 		 */
-		public boolean containsNonBST(int i) {
+		public boolean containsNonBST(T i) {
 			// TODO Auto-generated method stub.
 //			if(this.data.equals(i)) return true;
 //			if(this.left == null && this.right == null) return false;
@@ -202,6 +202,43 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 				this.right.toArrayList(arr);
 			}
 		}
+
+		/**
+		 * TODO Put here a description of what this method does.
+		 *
+		 * @param o
+		 * @return
+		 */
+		public BinarySearchTree<T>.BinaryNode insert(T o) {
+			// TODO Auto-generated method stub.
+			if(this == BinarySearchTree.this.NULL_NODE) return new BinaryNode(o);
+			else if(o.compareTo(this.data) < 0) this.left = this.left.insert(o);
+			else if(o.compareTo(this.data) > 0) this.right = this.right.insert(o);
+			
+			return this;
+		}
+
+		/**
+		 * TODO Put here a description of what this method does.
+		 *
+		 * @param element
+		 * @return
+		 */
+		public BinarySearchTree<T>.BinaryNode remove(T element) {
+			// TODO Auto-generated method stub.
+			if(this.data.compareTo(element) > 0) this.left.remove(element);
+			else if(this.data.compareTo(element) < 0) this.right.remove(element);
+			else{
+				if(this.left == NULL_NODE && this.right == NULL_NODE) return NULL_NODE;
+				else if (this.left == NULL_NODE) return this.right;
+				else if (this.right == NULL_NODE) return this.left;
+				else {
+					
+				}
+			}
+			
+			return null;
+		}
 		
 	}
 
@@ -248,7 +285,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 	 * @param i
 	 * @return
 	 */
-	public boolean containsNonBST(int i) {
+	public boolean containsNonBST(T i) {
 		// TODO Auto-generated method stub.
 //		if(this.isEmpty()) return false;
 		
@@ -323,9 +360,11 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 	
 	public class InOrderIterator implements Iterator<T>{
 		private Stack<BinaryNode> st;
+		private int n;
 		InOrderIterator(){
 			this.st = new Stack<BinaryNode>();
 			this.st.push(BinarySearchTree.this.root);
+			this.n = 0;
 		}
 
 		@Override
@@ -338,12 +377,20 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 		public T next() {
 			// TODO Auto-generated method stub.
 			if(this.st.isEmpty()) throw new NoSuchElementException();
-			BinaryNode current = st.pop();
+			if(this.st.peek() == BinarySearchTree.this.root && this.n == 0){
+				this.n++;
+				while(this.st.peek().left != BinarySearchTree.this.NULL_NODE){
+					this.st.push(this.st.peek().left);
+				}
+			}
+			BinaryNode current = this.st.pop();
 			T out = current.data;
-			if(current.right != NULL_NODE){
+			if(current.right != BinarySearchTree.this.NULL_NODE){
 				current = current.right;
-				while(current.left != NULL_NODE){
+				this.st.push(current);
+				while(current.left != BinarySearchTree.this.NULL_NODE){
 					current = current.left;
+					this.st.push(current);
 				}
 			}
 			
@@ -386,7 +433,17 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 		}
 		
 	}
+	public boolean insert(T o){
+		 if(this.containsNonBST(o)) return false;
+		 this.root = this.root.insert(o);
+		 return true;
+	}
 	
+	public boolean remove(T element){
+		if(!this.containsNonBST(element)) return false;
+		this.root = this.root.remove(element);
+		return true;
+	}
 	 
 
 }
