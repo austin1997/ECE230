@@ -318,7 +318,37 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 	@Override
 	public Iterator<T> iterator() {
 		// TODO Auto-generated method stub.
-		return null;
+		return new InOrderIterator();
+	}
+	
+	public class InOrderIterator implements Iterator<T>{
+		private Stack<BinaryNode> st;
+		InOrderIterator(){
+			this.st = new Stack<BinaryNode>();
+			this.st.push(BinarySearchTree.this.root);
+		}
+
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub.
+			return !(this.st.isEmpty() || this.st.peek() == BinarySearchTree.this.NULL_NODE);
+		}
+
+		@Override
+		public T next() {
+			// TODO Auto-generated method stub.
+			if(this.st.isEmpty()) throw new NoSuchElementException();
+			BinaryNode current = st.pop();
+			T out = current.data;
+			if(current.right != NULL_NODE){
+				current = current.right;
+				while(current.left != NULL_NODE){
+					current = current.left;
+				}
+			}
+			
+			return out;
+		}
 	}
 
 	/**
@@ -333,7 +363,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 	}
 	
 	public class PreOrderIterator implements Iterator<T>{
-		Stack<BinaryNode> st;
+		private Stack<BinaryNode> st;
 		PreOrderIterator(){
 			this.st = new Stack<BinaryNode>();
 			this.st.push(BinarySearchTree.this.root);
@@ -342,7 +372,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 		@Override
 		public boolean hasNext() {
 			// TODO Auto-generated method stub.
-			return !(this.st.isEmpty() || this.st.peek() == NULL_NODE);
+			return !(this.st.isEmpty() || this.st.peek() == BinarySearchTree.this.NULL_NODE);
 		}
 
 		@Override
@@ -350,8 +380,8 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 			// TODO Auto-generated method stub.
 			if(this.st.isEmpty()) throw new NoSuchElementException();
 			BinaryNode current = this.st.pop();
-			if(current.right != NULL_NODE) this.st.push(current.right);
-			if(current.left != NULL_NODE)this.st.push(current.left);
+			if(current.right != BinarySearchTree.this.NULL_NODE) this.st.push(current.right);
+			if(current.left != BinarySearchTree.this.NULL_NODE)this.st.push(current.left);
 			return current.data;
 		}
 		
