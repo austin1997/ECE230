@@ -11,31 +11,8 @@ import java.util.Stack;
  * @param <T>
  */
 
-public class BinarySearchTree<T> implements Iterable<T>{
-	public class InefficientIterator implements Iterator<T>{
-		private ArrayList<T> list;
-		private int index;
-		InefficientIterator(){
-			this.list = toArrayList();
-			this.index = 0;
-		}
-
-		@Override
-		public boolean hasNext() {
-			// TODO Auto-generated method stub.
-			return this.index < this.list.size();
-		}
-
-		@Override
-		public T next() {
-			// TODO Auto-generated method stub.
-			if(!this.hasNext()) throw new NoSuchElementException();
-			return this.list.get(this.index++);
-		}
-		
-		
-		
-	}
+public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
+	
 	
 	
 	
@@ -311,6 +288,31 @@ public class BinarySearchTree<T> implements Iterable<T>{
 		// TODO Auto-generated method stub.
 //		return this.toArrayList().iterator();
 		return new InefficientIterator();
+	}
+	
+	public class InefficientIterator implements Iterator<T>{
+		private ArrayList<T> list;
+		private int index;
+		InefficientIterator(){
+			this.list = toArrayList();
+			this.index = 0;
+		}
+
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub.
+			return this.index < this.list.size();
+		}
+
+		@Override
+		public T next() {
+			// TODO Auto-generated method stub.
+			if(!this.hasNext()) throw new NoSuchElementException();
+			return this.list.get(this.index++);
+		}
+		
+		
+		
 	}
 
 	@Override
