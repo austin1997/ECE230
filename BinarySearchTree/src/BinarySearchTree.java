@@ -229,15 +229,19 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 			if(this.data.compareTo(element) > 0) this.left.remove(element);
 			else if(this.data.compareTo(element) < 0) this.right.remove(element);
 			else{
-				if(this.left == NULL_NODE && this.right == NULL_NODE) return NULL_NODE;
-				else if (this.left == NULL_NODE) return this.right;
-				else if (this.right == NULL_NODE) return this.left;
+				if(this.left == BinarySearchTree.this.NULL_NODE && this.right == BinarySearchTree.this.NULL_NODE) return BinarySearchTree.this.NULL_NODE;
+				else if (this.left == BinarySearchTree.this.NULL_NODE) return this.right;
+				else if (this.right == BinarySearchTree.this.NULL_NODE) return this.left;
 				else {
-					
+					BinaryNode temp = this.left;
+					while(temp.right != BinarySearchTree.this.NULL_NODE) temp = temp.right;
+					this.data = temp.data;
+					return temp.remove(element);
 				}
+				
 			}
 			
-			return null;
+
 		}
 		
 	}
@@ -434,15 +438,38 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 		
 	}
 	public boolean insert(T o){
-		 if(this.containsNonBST(o)) return false;
-		 this.root = this.root.insert(o);
-		 return true;
+		if(o == null) throw new IllegalArgumentException();
+		if(this.contains(o)) return false;
+		this.root = this.root.insert(o);
+		return true;
 	}
 	
 	public boolean remove(T element){
-		if(!this.containsNonBST(element)) return false;
+		if(element == null) throw new IllegalArgumentException();
+		if(!this.contains(element)) return false;
 		this.root = this.root.remove(element);
 		return true;
+	}
+
+	/**
+	 * TODO Put here a description of what this method does.
+	 *
+	 * @param i
+	 * @return
+	 */
+	public boolean contains(T i) {
+		// TODO Auto-generated method stub.
+//		if(this.root.data.equals(i)) return true;
+		BinaryNode current = this.root;
+		
+		while(current != this.NULL_NODE){
+			if(current.data.compareTo(i) > 0) current = current.left;
+			else if (current.data.compareTo(i) < 0) current = current.right;
+			else return true;
+		}
+		
+		
+		return false;
 	}
 	 
 
