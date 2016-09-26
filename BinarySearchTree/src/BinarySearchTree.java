@@ -483,7 +483,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 	}
 	public boolean insert(T o){
 		if(o == null) throw new IllegalArgumentException();
-		if(this.contains(o)) return false;
+//		if(this.contains(o)) return false;
 		this.change ++;
 		this.root = this.root.insert(o);
 		return true;
