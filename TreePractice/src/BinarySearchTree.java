@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 /**
  * Binary Tree practice problems
  * 
@@ -18,7 +20,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
 	private final BinaryNode NULL_NODE = new BinaryNode(null);
 
 	public BinarySearchTree() {
-		root = NULL_NODE;
+		this.root = this.NULL_NODE;
 	}
 
 	/**
@@ -31,7 +33,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
 
 	public int countPositives() {
 		// TODO: 1 Write this.
-		return -17;
+		return this.root.countPositive();
 	}
 
 	/**
@@ -44,7 +46,9 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
 	 */
 	public int getDepth(T item) {
 		// TODO: 2 Write this.
-		return -17;
+		if(this.root == this.NULL_NODE) return -1;
+		int depth = this.root.getDepth(item);
+		return depth < 0 ? -1 : depth;
 	}
 
 	/**
@@ -61,7 +65,9 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
 
 	public String numChildrenOfEachNode() {
 		// TODO: 3 Write this.
-		return "change me!";
+		if(this.root == this.NULL_NODE) return "";
+		
+		return this.root.numChildrenOfEachNode();
 	}
 
 	/**
@@ -76,11 +82,12 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
 	 */
 	public boolean isZigZag() {
 		// TODO: 4 Write this.
-		return false;
+		if(this.root == this.NULL_NODE) return true;
+		return this.root.isZigZag();
 	}
 
 	public void insert(T e) {
-		root = root.insert(e);
+		this.root = this.root.insert(e);
 	}
 
 	// /////////////// BinaryNode
@@ -89,20 +96,102 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
 		public T element;
 		public BinaryNode left;
 		public BinaryNode right;
-
+		
 		public BinaryNode(T element) {
 			this.element = element;
-			this.left = NULL_NODE;
-			this.right = NULL_NODE;
+			this.left = BinarySearchTree.this.NULL_NODE;
+			this.right = BinarySearchTree.this.NULL_NODE;
+		}
+		/**
+		 * TODO Put here a description of what this method does.
+		 *
+		 * @return
+		 */
+		public boolean isZigZag() {
+			// TODO Auto-generated method stub.
+			if(this.left == BinarySearchTree.this.NULL_NODE && this.right == BinarySearchTree.this.NULL_NODE) return true;
+			if(this.left != BinarySearchTree.this.NULL_NODE && this.right != BinarySearchTree.this.NULL_NODE) return false;
+			if(this.left != BinarySearchTree.this.NULL_NODE) return this.left.isZigZagHelper(true);
+			else return this.right.isZigZagHelper(false);
+		}
+		private boolean isZigZagHelper(boolean flag){
+			if(this.left == BinarySearchTree.this.NULL_NODE && this.right == BinarySearchTree.this.NULL_NODE) return true;
+			if(this.left != BinarySearchTree.this.NULL_NODE && this.right != BinarySearchTree.this.NULL_NODE) return false;
+			if(this.left != BinarySearchTree.this.NULL_NODE && !flag) return this.left.isZigZagHelper(true);
+			if(this.right != BinarySearchTree.this.NULL_NODE && flag) return this.right.isZigZagHelper(false);
+			return false;
+			
+		}
+		
+		/**
+		 * TODO Put here a description of what this method does.
+		 *
+		 * @return
+		 */
+		public String numChildrenOfEachNode() {
+			// TODO Auto-generated method stub
+			return this.numChildrenOfEachNodeHelper();
+		}
+		private String numChildrenOfEachNodeHelper(){
+			if(this == BinarySearchTree.this.NULL_NODE) return "";
+			return  this.getNumofChildren() + this.left.numChildrenOfEachNodeHelper()  + this.right.numChildrenOfEachNodeHelper();
+			
+		}
+		private int getNumofChildren(){
+			int n = 0;
+			if(this.left != BinarySearchTree.this.NULL_NODE) n++;
+			if(this.right != BinarySearchTree.this.NULL_NODE) n++;
+			return n;
+		}
+		/**
+		 * TODO Put here a description of what this method does.
+		 *
+		 * @param item
+		 * @return
+		 */
+		public int getDepth(T item) {
+			// TODO Auto-generated method stub.
+			if(item.compareTo(this.element) > 0) {
+				if(this.right == BinarySearchTree.this.NULL_NODE) return Integer.MIN_VALUE;
+				return this.right.getDepth(item) + 1;
+			}
+			if(item.compareTo(this.element) < 0) {
+				if(this.left == BinarySearchTree.this.NULL_NODE) return Integer.MIN_VALUE;
+				return this.left.getDepth(item) + 1;
+			}
+			return 0;
+		}
+		/**
+		 * TODO Put here a description of what this method does.
+		 *
+		 * @return
+		 */
+		public int countPositive() {
+			// TODO Auto-generated method stub.
+			Stack<BinaryNode> st = new Stack <BinaryNode>();
+			return countPositiveHelper(st);
+		}
+		
+		private int countPositiveHelper(Stack<BinaryNode> st){
+			if(this == BinarySearchTree.this.NULL_NODE) return 0;
+			if(this.right != BinarySearchTree.this.NULL_NODE) st.push(this.right);
+			if(this.left != BinarySearchTree.this.NULL_NODE) st.push(this.left);
+			if(st.size() > 0 ) {
+				if((int)this.element > 0) return st.pop().countPositiveHelper(st) + 1;
+				else return st.pop().countPositiveHelper(st);
+			}
+			else {
+				return (int)this.element > 0 ? 1 : 0;
+			}
 		}
 
 		public BinaryNode insert(T e) {
-			if (this == NULL_NODE) {
+			if (this == BinarySearchTree.this.NULL_NODE) {
 				return new BinaryNode(e);
-			} else if (e.compareTo(element) < 0) {
-				left = left.insert(e);
-			} else if (e.compareTo(element) > 0) {
-				right = right.insert(e);
+			} else if (e.compareTo(this.element) < 0) {
+				this.left = this.left.insert(e);
+			} else if (e.compareTo(this.element) > 0) {
+				this.right = this.right.insert(e);
 			} else {
 				// do nothing
 			}
