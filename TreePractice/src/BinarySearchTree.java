@@ -3,7 +3,7 @@ import java.util.Stack;
 /**
  * Binary Tree practice problems
  * 
- * @author Matt Boutell and <<<YOUR NAME HERE>>>. 2014.
+ * @author Matt Boutell and <<<Zhihong Zhai>>>. 2014.
  * @param <T>
  */
 
