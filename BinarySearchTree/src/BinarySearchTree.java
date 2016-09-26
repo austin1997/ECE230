@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
@@ -13,7 +14,7 @@ import java.util.Stack;
 
 public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 	
-	
+	private int change;
 	
 	
 	@Override
@@ -33,6 +34,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 	private final BinaryNode NULL_NODE = new BinaryNode();
 
 	public BinarySearchTree() {
+		this.change = 0;
 		this.root = this.NULL_NODE;
 	}
 
@@ -226,21 +228,28 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 		 */
 		public BinarySearchTree<T>.BinaryNode remove(T element) {
 			// TODO Auto-generated method stub.
-			if(this.data.compareTo(element) > 0) this.left.remove(element);
-			else if(this.data.compareTo(element) < 0) this.right.remove(element);
-			else{
-				if(this.left == BinarySearchTree.this.NULL_NODE && this.right == BinarySearchTree.this.NULL_NODE) return BinarySearchTree.this.NULL_NODE;
-				else if (this.left == BinarySearchTree.this.NULL_NODE) return this.right;
-				else if (this.right == BinarySearchTree.this.NULL_NODE) return this.left;
+			if (this.data.compareTo(element) > 0) {
+				this.left = this.left.remove(element);
+			} else if (this.data.compareTo(element) < 0) {
+				this.right = this.right.remove(element);
+			} else {
+				if (this.left == BinarySearchTree.this.NULL_NODE && this.right == BinarySearchTree.this.NULL_NODE)
+					return BinarySearchTree.this.NULL_NODE;
+				else if (this.left == BinarySearchTree.this.NULL_NODE)
+					return this.right;
+				else if (this.right == BinarySearchTree.this.NULL_NODE)
+					return this.left;
 				else {
 					BinaryNode temp = this.left;
-					while(temp.right != BinarySearchTree.this.NULL_NODE) temp = temp.right;
+					while (temp.right != BinarySearchTree.this.NULL_NODE)
+						temp = temp.right;
+					T t = this.data;
 					this.data = temp.data;
-					return temp.remove(element);
+					temp.data = t;
+					this.left = this.left.remove(t);
 				}
-				
 			}
-			
+			return this;
 
 		}
 		
@@ -348,6 +357,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 		@Override
 		public T next() {
 			// TODO Auto-generated method stub.
+			
 			if(!this.hasNext()) throw new NoSuchElementException();
 			return this.list.get(this.index++);
 		}
@@ -363,23 +373,40 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 	}
 	
 	public class InOrderIterator implements Iterator<T>{
+		@Override
+		public void remove() {
+			// TODO Auto-generated method stub.
+			if(BinarySearchTree.this.isEmpty() || this.nxt < 1) throw new IllegalStateException();
+//			Iterator.super.remove();
+			BinarySearchTree.this.remove(this.current.data);
+			this.nxt = 0;
+		}
+		
+		private BinaryNode current;
+		private int nxt;
 		private Stack<BinaryNode> st;
 		private int n;
-		InOrderIterator(){
+		private final int change;
+		public InOrderIterator(){
 			this.st = new Stack<BinaryNode>();
 			this.st.push(BinarySearchTree.this.root);
 			this.n = 0;
+			this.change = BinarySearchTree.this.change;
+			this.nxt = 0;
+			this.current = BinarySearchTree.this.NULL_NODE;
 		}
 
 		@Override
 		public boolean hasNext() {
 			// TODO Auto-generated method stub.
+			if(BinarySearchTree.this.change != this.change) throw new ConcurrentModificationException();
 			return !(this.st.isEmpty() || this.st.peek() == BinarySearchTree.this.NULL_NODE);
 		}
 
 		@Override
 		public T next() {
 			// TODO Auto-generated method stub.
+			if(BinarySearchTree.this.change != this.change) throw new ConcurrentModificationException();
 			if(this.st.isEmpty()) throw new NoSuchElementException();
 			if(this.st.peek() == BinarySearchTree.this.root && this.n == 0){
 				this.n++;
@@ -387,17 +414,17 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 					this.st.push(this.st.peek().left);
 				}
 			}
-			BinaryNode current = this.st.pop();
-			T out = current.data;
-			if(current.right != BinarySearchTree.this.NULL_NODE){
-				current = current.right;
-				this.st.push(current);
-				while(current.left != BinarySearchTree.this.NULL_NODE){
-					current = current.left;
-					this.st.push(current);
+			this.current = this.st.pop();
+			T out = this.current.data;
+			if(this.current.right != BinarySearchTree.this.NULL_NODE){
+				BinaryNode temp = this.current.right;
+				this.st.push(temp);
+				while(temp.left != BinarySearchTree.this.NULL_NODE){
+					temp = this.current.left;
+					this.st.push(temp);
 				}
 			}
-			
+			this.nxt = 1;
 			return out;
 		}
 	}
@@ -414,32 +441,50 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 	}
 	
 	public class PreOrderIterator implements Iterator<T>{
+		@Override
+		public void remove() {
+			// TODO Auto-generated method stub.
+			if(BinarySearchTree.this.isEmpty() || this.nxt < 1) throw new IllegalStateException();
+//			Iterator.super.remove();
+			BinarySearchTree.this.remove(this.current.data);
+			this.nxt = 0;
+		}
+		private BinaryNode current;
 		private Stack<BinaryNode> st;
-		PreOrderIterator(){
+		private final int change;
+		private int nxt;
+		
+		public PreOrderIterator(){
+			this.current = BinarySearchTree.this.NULL_NODE;
 			this.st = new Stack<BinaryNode>();
 			this.st.push(BinarySearchTree.this.root);
+			this.change = BinarySearchTree.this.change;
 		}
 
 		@Override
 		public boolean hasNext() {
 			// TODO Auto-generated method stub.
+			if(BinarySearchTree.this.change != this.change) throw new ConcurrentModificationException();
 			return !(this.st.isEmpty() || this.st.peek() == BinarySearchTree.this.NULL_NODE);
 		}
 
 		@Override
 		public T next() {
 			// TODO Auto-generated method stub.
+			if(BinarySearchTree.this.change != this.change) throw new ConcurrentModificationException();
 			if(this.st.isEmpty()) throw new NoSuchElementException();
-			BinaryNode current = this.st.pop();
-			if(current.right != BinarySearchTree.this.NULL_NODE) this.st.push(current.right);
-			if(current.left != BinarySearchTree.this.NULL_NODE)this.st.push(current.left);
-			return current.data;
+			this.current = this.st.pop();
+			if(this.current.right != BinarySearchTree.this.NULL_NODE) this.st.push(this.current.right);
+			if(this.current.left != BinarySearchTree.this.NULL_NODE)this.st.push(this.current.left);
+			this.nxt = 1;
+			return this.current.data;
 		}
 		
 	}
 	public boolean insert(T o){
 		if(o == null) throw new IllegalArgumentException();
 		if(this.contains(o)) return false;
+		this.change ++;
 		this.root = this.root.insert(o);
 		return true;
 	}
@@ -447,6 +492,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 	public boolean remove(T element){
 		if(element == null) throw new IllegalArgumentException();
 		if(!this.contains(element)) return false;
+		this.change ++;
 		this.root = this.root.remove(element);
 		return true;
 	}
