@@ -132,10 +132,10 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 		 *
 		 * @return
 		 */
-		public boolean contains(int i) {
+		public boolean contains(T i) {
 			// TODO Auto-generated method stub.
 			if(this.data.equals(i)) return true;
-			if(((Integer) this.data).compareTo(i) > 0)return this.left == BinarySearchTree.this.NULL_NODE?false : this.left.contains(i);
+			if(this.data.compareTo(i) > 0)return this.left == BinarySearchTree.this.NULL_NODE?false : this.left.contains(i);
 			return this.right == BinarySearchTree.this.NULL_NODE?false : this.right.contains(i);
 			
 		}
