@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 
+//import BinarySearchTree.BinaryNode;
+
 /**
  * 
  * Implementation of most of the Set interface operations using a Binary Search Tree
@@ -122,7 +124,11 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 //			else if(this.right == null) return this.left.height() + 1;
 //			else return this.left.height() > this.right.height()?this.left.height() + 1 : this.right.height() + 1;
 			if(this == BinarySearchTree.this.NULL_NODE) return 0;
-			else return this.left.height() > this.right.height()?this.left.height() + 1 : this.right.height() + 1;
+			else {
+				int left = this.left.height();
+				int right = this.right.height();
+				return left > right?left + 1 : right + 1;
+			}
 
 		}
 
@@ -211,12 +217,11 @@ public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T>{
 		 * @param o
 		 * @return
 		 */
-		public BinarySearchTree<T>.BinaryNode insert(T o) {
+		public BinarySearchTree<T>.BinaryNode insert(T e) {
 			// TODO Auto-generated method stub.
-			if(this == BinarySearchTree.this.NULL_NODE) return new BinaryNode(o);
-			else if(o.compareTo(this.data) < 0) this.left = this.left.insert(o);
-			else if(o.compareTo(this.data) > 0) this.right = this.right.insert(o);
-			
+			if (this == BinarySearchTree.this.NULL_NODE) return new BinaryNode(e);
+			else if (e.compareTo(this.data) < 0) this.left = this.left.insert(e);
+			else if (e.compareTo(this.data) > 0) this.right = this.right.insert(e);
 			return this;
 		}
 
