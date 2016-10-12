@@ -1,5 +1,7 @@
 package buildtree;
 
+import java.util.Stack;
+
 /**
  * 
  * @author Matt Boutell and <<<YOUR NAME HERE>>>.
@@ -13,7 +15,7 @@ public class BinaryTree {
 	private final BinaryNode NULL_NODE = new BinaryNode(null);
 
 	public BinaryTree() {
-		root = NULL_NODE;
+		this.root = this.NULL_NODE;
 	}
 
 	/**
@@ -25,11 +27,38 @@ public class BinaryTree {
 	 *            One char per node.
 	 * @param children
 	 *            L,R, 2, or 0.
+	 * @throws Exception 
 	 */
-	public BinaryTree(String chars, String children) {
+	public BinaryTree(String chars, String children){
 		// TODO: Implement this constructor. You may not add any other fields to
 		// the BinaryTree class, but you may add local variables and helper
 		// methods if you like.
+		if (chars.length() <= 0){
+			this.root = this.NULL_NODE;
+			return;
+		}
+		Stack<BinaryNode> st = new Stack <BinaryNode>();
+		this.root = new BinaryNode(chars.charAt(0));
+		BinaryNode current = this.root;
+		for (int i = 0; i < chars.length() - 1; i++){
+			if (children.charAt(i) == '2'){
+				current.left = new BinaryNode(chars.charAt(i + 1));
+				st.push(current);
+				current = current.left;
+			}else if (children.charAt(i) == 'R'){
+				current.right = new BinaryNode(chars.charAt(i + 1));
+				current = current.right;
+			}else if (children.charAt(i) == 'L'){
+				current.left = new BinaryNode(chars.charAt(i + 1));
+				current = current.left;
+			}else if (children.charAt(i) == '0'){
+				current = st.pop();
+				current.right = new BinaryNode(chars.charAt(i + 1));
+				current = current.right;
+			}
+		}
+		
+		
 	}
 
 	/**
@@ -37,7 +66,7 @@ public class BinaryTree {
 	 */
 	@Override
 	public String toString() {
-		return root.toString();
+		return this.root.toString();
 	}
 
 	/**
@@ -45,7 +74,7 @@ public class BinaryTree {
 	 *         brackets so that the structure of the tree can be determined.
 	 */
 	public String toStructuredString() {
-		return root.toStructuredString();
+		return this.root.toStructuredString();
 	}
 
 	// /////////////// BinaryNode
@@ -57,24 +86,24 @@ public class BinaryTree {
 
 		public BinaryNode(Character element) {
 			this.data = element;
-			this.left = NULL_NODE;
-			this.right = NULL_NODE;
+			this.left = BinaryTree.this.NULL_NODE;
+			this.right = BinaryTree.this.NULL_NODE;
 		}
 
 		@Override
 		public String toString() {
-			if (this == NULL_NODE) {
+			if (this == BinaryTree.this.NULL_NODE) {
 				return "";
 			}
-			return left.toString() + data + right.toString();
+			return this.left.toString() + this.data + this.right.toString();
 		}
 
 		public String toStructuredString() {
-			if (this == NULL_NODE) {
+			if (this == BinaryTree.this.NULL_NODE) {
 				return "";
 			}
-			return "(" + left.toStructuredString() + this.data
-					+ right.toStructuredString() + ")";
+			return "(" + this.left.toStructuredString() + this.data
+					+ this.right.toStructuredString() + ")";
 		}
 
 	}
